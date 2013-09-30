@@ -129,7 +129,7 @@ class Lm_Component_Request {
     * @return string
     */
     public function getUri() {
-        return $this->getServer(REQUEST_URI);
+        return $this->getServer(SCRIPT_NAME);
     }
 
     /**
