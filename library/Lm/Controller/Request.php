@@ -4,10 +4,12 @@
 /*
 * http resquest
 */
-class Lm_Component_Request {
+class Lm_Controller_Request {
  
+    //cache for body
     private $rawBody = null;
 
+    //cache for headers
     private $headers = null;
    
     /*
@@ -95,8 +97,6 @@ class Lm_Component_Request {
 
             if (strlen(trim($body)) > 0) {
                 $this->rawBody = $body;
-            } else {
-                $this->rawBody = null;
             }
         }
         return $this->rawBody;
@@ -124,11 +124,11 @@ class Lm_Component_Request {
     }
 
     /*
-    * Get the uri of the request
+    * Get the full path of the requested file
     *
     * @return string
     */
-    public function getUri() {
+    public function getScriptName() {
         return $this->getServer(SCRIPT_NAME);
     }
 

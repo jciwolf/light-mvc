@@ -1,12 +1,21 @@
 <?php
 
-class Lm_Component_Response {
+class Lm_Controller_Response {
 
     private $body = null;
 
     private $headers = null;
 
     private $httpCode = 200;
+ 
+    //whether need a template or not
+    private $needTemplate = true;
+
+    //specify a template
+    private $templateName = null;
+
+    //params for template
+    private $templateParams = null;
 
     public function setBody($body) {
         $this->body = $body;
@@ -47,5 +56,30 @@ class Lm_Component_Response {
 
         //output body
         echo $this->getBody();
+        return;
     }
-}
+
+    public function setNeedTemplate($needTemplate) {
+        $this->needTemplate = $needTemplate;
+        return;
+    }
+
+    public function getNeedTemplate() {
+        return $this->needTemplate;
+    }
+
+    public function setTemplateName($templateName) {
+        $this->templateName = $templateName;
+        return;
+    }
+
+    public function setTemplateParam($key, $value) {
+        $this->templateParams += array($key => $value);
+        return;
+    }
+
+    public function getTemplateParams() {
+        return $this->templateParams;
+    }
+
+}// END OF CLASS
