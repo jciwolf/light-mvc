@@ -15,13 +15,13 @@ class Lm_Controller_Base {
     /*
     * callback function before action is executed
     */
-    function init() {
+    public function init() {
     }
 
     /*
     * callback function after action has been executed
     */
-    function shutdown() {
+    public function shutdown() {
     }
 
     public function getRequest() {
