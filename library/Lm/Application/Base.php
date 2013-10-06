@@ -8,13 +8,13 @@ class Lm_Application_Base {
 
     const SPECIAL_DELIMITER = '_';
 
-    const APPLICATION_DIR = 'application/'
+    const APPLICATION_DIR = 'application/';
 
     const CONFIG_DIR = 'config/';
 
     const CONFIG_FILE = 'config.ini.php';
  
-    const MODULES_DIR = 'module/';
+    const MODULE_DIR = 'module/';
 
     const CONTROLLER_DIR = 'controller/';
 
@@ -35,14 +35,14 @@ class Lm_Application_Base {
     private $configModules = null;
     
     public function __construct($basePath) {
-        $this->basePath = $basePath;
+        $this->basePath = rtrim($basePath, "/")."/";
 
         //init
         $this->init();
     }
 
     public function init() {
-        $appConfigFile = $this->basePath."/".self::CONFIG_DIR.self::CONFIG_FILE;     
+        $appConfigFile = $this->basePath.self::CONFIG_DIR.self::CONFIG_FILE;     
         if (!file_exist($appConfigFile)) {
             throw new Lm_Application_Exception("Config:".$appConfigFile." doesn't exist");           
         }
@@ -64,32 +64,42 @@ class Lm_Application_Base {
         $this->router = new Lm_Router($this->configModules[0]);
     }
 
+    /*
+    * start the application
+    */
     public function run() {
         $this->dispatch();
-
-        $response = $this->response();
-        
+        $this->response()->output();
+        exit;
     }
 
     public function dispatch() {
         $route = $this->router->parse($this->request->getScriptName());
         
+        //execute handler
+        $controller = $this->loadController($route);
+        $action = $route->getActionMethodName();
+        $controller->$action();
+    }
+
+    private function loadController($route) {
         $module = $route->getModule();
         $controller = $route->getController();
         $action = $route->getAction();
 
-        //execute handler
-        $controller = $this->loadController($module, $controller, $action);
-        $response = $controller->$action();
-
-        if ($response->isError()) {
-            
-        } else {
+        //check module
+        if (!in_array($module, $this->configModules)) {
+            throw new Lm_Application_NoModule("The module:".$module." hasn't been configured");
         }
-    }
 
-    private function loadController($module, $controller, $action) {
-        $controllerFile = $this->basePath."/".self::MODULES_DIR.self::CONTROLLER_DIR.$controller.".php";
+        $moduleDir = $this->basePath."/".self::MODULE_DIR;
+        if (!is_dir($moduleDir)) {
+            throw new Lm_Application_NoModule("The module dir:".$moduleDir." does't exist");
+        }
+
+        $controllerClass = $route->getControllerClassName();
+        $controllerFile = $moduleDir.$controllerClass.self::CLASSFILE_SUFFIX;
+
         if (!file_exist($controllerFile)) {
             throw new Lm_Application_NoController("The controller source:".$controllerFile." doesn't exist");
         }
@@ -99,8 +109,8 @@ class Lm_Application_Base {
             throw new Lm_Application_NoController("The controller class:".$controller." doesn't exist");
         }
 
-        $conObj = new $controller(); 
-        if !(method_exists($conObj, $action)) {
+        $conObj = new $controllerClass(); 
+        if (!method_exists($conObj, $action)) {
             throw new Lm_Application_NoAction("The action:".$action." doesn't exist in ".$controller);
         }
 

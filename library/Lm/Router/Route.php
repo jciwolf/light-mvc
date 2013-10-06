@@ -2,6 +2,8 @@
 
 class Route {
 
+    const SPECIAL_DELIMITER = '_';
+
     private $module = null;
 
     private $controller = null;
@@ -33,6 +35,26 @@ class Route {
 
     public function getAction() {
         return $this->action;
+    }
+
+    public function getControllerClassName() {
+        $parts = explode(self::SPECIAL_DELIMITER, $this->controller);
+        $className = "";
+        foreach($parts as $part) {
+            $className .= ucwords($part);
+        }
+
+        return $className;
+    }
+
+    public function getActionMethodName() {
+        $parts = explode(self::SPECIAL_DELIMITER, $this->action);
+        $methodName = array_shift($parts);
+        foreach($parts as $part) {
+            $methodName .= ucwords($part);
+        }
+    
+        return $methodName;
     }
 
 }//END OF CLASS
