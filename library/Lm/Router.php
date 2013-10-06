@@ -1,19 +1,12 @@
 <?php
 
 class Lm_Controller_Router {
-    const URI_DELIMITER = '/';
-
-    const SPECIAL_DELIMITER = '_';
-
-    const CONTROLLER_SUFFIX = "Controller";
-
-    const ACTION_SUFFIX = "Action";
 
     private $defaultModule = null;
 
-    private $defaultController = "IndexController";
+    private $defaultController = "index";
 
-    private $defaultAction = "indexAction";
+    private $defaultAction = "index";
 
     public function __construct(string $defaultModule) {
         $this->defaultModule = $defaultModule;
@@ -28,9 +21,8 @@ class Lm_Controller_Router {
     public function parse(string $uri) {
         $route = new Lm_Router_Route;
 
-        $path = explode(self::URI_DELIMITER, $uri);
-        $path = array_shift($path);
-            
+        $path = explode(DIRECTORY_SEPARATOR, trim($uri, DIRECTORY_SEPARATOR));
+
         $length = count($path);
         if ($length > 3) {
             throw new Lm_Router_Exception("request error, no script for ".$path);               
@@ -40,7 +32,7 @@ class Lm_Controller_Router {
         if (!empty($path)) {
             $script = array_pop($path);
             $action = explode(".".$script);               
-            $route->setAction($action[0].self::ACTION_SUFFIX);
+            $route->setAction(strtolower($action[0]));
         } else {
             $route->setAction($this->defaultAction);
         }
@@ -48,14 +40,14 @@ class Lm_Controller_Router {
         //extract controller
         if (!empty($path)) {
             $controller = array_pop($path);
-            $route->setController($controller.self::CONTROLLER_SUFFIX);
+            $route->setController(strtolower($controller));
         } else {
             $route->setController($this->defaultController);
         }
 
         if (!empty($path)) {
             $module = array_pop($path);
-            $route->setModule($module);
+            $route->setModule(strtolower($module));
         } else {
             $route->setModule($this->defaultModule);
         }

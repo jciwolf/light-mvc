@@ -15,13 +15,13 @@ class Lm_Controller_Base {
     /*
     * callback function before action is executed
     */
-    void init() {
+    function init() {
     }
 
     /*
     * callback function after action has been executed
     */
-    void shutdown() {
+    function shutdown() {
     }
 
     public function getRequest() {
@@ -41,9 +41,17 @@ class Lm_Controller_Base {
         }
 
         $this->init();
-        $this->$method();
+
+        try {
+            $this->$method();
+        } catch (Exception $e) {//default error handling
+            $response = $this->response;
+            $response->setException($e);   
+        }
+
         $this->shutdown();
 
         return $this->response;
     }
-}
+
+}//END OF CLASS

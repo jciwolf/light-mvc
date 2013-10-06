@@ -17,6 +17,9 @@ class Lm_Controller_Response {
     //params for template
     private $templateParams = null;
 
+    //cached exception
+    private $exception = null;
+
     public function setBody($body) {
         $this->body = $body;
         return;
@@ -42,6 +45,11 @@ class Lm_Controller_Response {
 
     public function getHeaders() {
         return $this->_headers;
+    }
+
+    public function clearHeaders() {
+        $this->_headers = null;
+        return;
     }
 
     public function output() {
@@ -80,6 +88,25 @@ class Lm_Controller_Response {
 
     public function getTemplateParams() {
         return $this->templateParams;
+    }
+
+    public function clearTemplateParams() {
+        $this->templateParams = null;
+        return;
+    }
+
+    public function setException(Lm_Exception $e) {
+        $this->exception = $e;
+        return;
+    }
+
+    public function clearException() {
+        $this->exception = null;
+        return;
+    }
+
+    public function isError() {
+        return !empty($this->exception);
     }
 
 }// END OF CLASS

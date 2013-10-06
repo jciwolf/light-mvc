@@ -158,4 +158,5 @@ class Lm_Controller_Request {
     public function isSecure() {
         return $this->getServer('HTTPS') == 'on';
     }
-}
+
+}//END OF CLASS
