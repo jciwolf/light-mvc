@@ -66,7 +66,7 @@ class Lm_Application_Base {
     public function run() {
         $this->dispatch();
         $this->response->output();
-        exit;
+        return;
     }
 
     public function dispatch() {
