@@ -104,7 +104,7 @@ class Lm_Application_Base {
             throw new Lm_Application_NoController("The controller source:".$controllerFile." doesn't exist");
         }
         
-        require_once ($controllerFile);
+        require ($controllerFile);
         if (!class_exists($controllerClass)) {
             throw new Lm_Application_NoController("The controller class:".$controllerClass." doesn't exist");
         }

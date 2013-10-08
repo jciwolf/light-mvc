@@ -7,6 +7,6 @@ set_include_path(implode(PATH_SEPARATOR, array(
 )));
 
 // Autoload class
-require_once 'Lm/Autoloader.php';
+require 'Lm/Autoloader.php';
 $loader = Lm_Autoloader::getInstance();
 $loader->init();
