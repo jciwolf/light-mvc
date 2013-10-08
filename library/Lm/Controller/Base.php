@@ -1,6 +1,6 @@
 <?php
 
-class Lm_Controller_Base {
+abstract class Lm_Controller_Base {
 
     private $request;
 
@@ -15,14 +15,12 @@ class Lm_Controller_Base {
     /*
     * callback function before action is executed
     */
-    public function init() {
-    }
+    abstract public function init();
 
     /*
     * callback function after action has been executed
     */
-    public function shutdown() {
-    }
+    abstract public function shutdown();
 
     public function getRequest() {
         return $this->request;
