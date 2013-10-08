@@ -71,7 +71,10 @@ class Lm_Application_Base {
 
     public function dispatch() {
         $route = $this->router->parse($this->request->getScriptName());
-        
+
+        //check module  
+        $this->checkModule($route);
+   
         //execute handler
         $controller = $this->loadController($route);
         $action = $route->getActionMethodName();
@@ -79,24 +82,40 @@ class Lm_Application_Base {
         if (!method_exists($controller, $action)) {
             throw new Lm_Application_NoAction("The action:".$action." doesn't exist in ".$controller);
         }
-        $controller->$action();
+
+        $response = $controller->__call($action, null);
+        //handle template
+        if ($response->getNeedTemplate()) {
+            $templateName = $response->getTemplateName();
+            if (!empty($templateName)) {
+                $route->setAction($templateName);
+            }
+        }
+
+        $this->loadTemplate($route);
     }
 
-    private function loadController($route) {
+    private function checkModule($route) {
         $module = $route->getModule();
-        $controller = $route->getController();
-        $action = $route->getAction();
 
         //check module
         if (!in_array($module, $this->configModules)) {
             throw new Lm_Application_NoModule("The module:".$module." hasn't been configured");
         }
 
-        $applicationDir = $this->basePath.self::APPLICATION_DIR;
-        $moduleDir = $applicationDir.self::MODULE_DIR.$module."/";
+        $moduleDir = $this->getModuleDirPath($route);
         if (!is_dir($moduleDir)) {
             throw new Lm_Application_NoModule("The module dir:".$moduleDir." does't exist");
         }
+    }
+
+    private function getModuleDirPath($route) {
+        $module = $route->getModule();
+        return $this->basePath.self::APPLICATION_DIR.self::MODULE_DIR.$module."/";
+    }
+
+    private function loadController($route) {
+        $moduleDir = $this->getModuleDirPath($route);
 
         $controllerClass = $route->getControllerClassName();
         $controllerFile = $moduleDir.self::CONTROLLER_DIR.$controllerClass.self::CLASSFILE_SUFFIX;
@@ -113,6 +132,15 @@ class Lm_Application_Base {
         return $conObj;
     }
 
-    private function loadTemplate() {
+    private function loadTemplate($route) {
+        $moduleDir = $this->getModuleDirPath($route);
+        
+        $controller = $route->getController();
+        $action = $route->getAction();
+
+        $templateFile = $moduleDir.self::TEMPLATE_DIR.$controller."/".$action.self::TEMPLATEFILE_SUFFIX;
+        $template = new Lm_Template_Base($templateFile, $this->response);
+        $template->load();
+        return;
     }
 }

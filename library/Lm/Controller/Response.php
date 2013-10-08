@@ -15,7 +15,7 @@ class Lm_Controller_Response {
     private $templateName = null;
 
     //params for template
-    private $templateParams = null;
+    private $templateParams = array();
 
     //cached exception
     private $exception = null;
@@ -81,6 +81,10 @@ class Lm_Controller_Response {
     public function setTemplateName($templateName) {
         $this->templateName = $templateName;
         return;
+    }
+
+    public function getTemplateName() {
+        return $this->templateName;
     }
 
     public function setTemplateParam($key, $value) {
