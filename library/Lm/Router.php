@@ -1,6 +1,6 @@
 <?php
 
-class Lm_Controller_Router {
+class Lm_Router {
 
     private $defaultModule = null;
 
@@ -8,7 +8,7 @@ class Lm_Controller_Router {
 
     private $defaultAction = "index";
 
-    public function __construct(string $defaultModule) {
+    public function __construct($defaultModule) {
         $this->defaultModule = $defaultModule;
     }
 
@@ -18,7 +18,7 @@ class Lm_Controller_Router {
     * @param $uri string
     * @return array
     */
-    public function parse(string $uri) {
+    public function parse($uri) {
         $route = new Lm_Router_Route;
 
         $path = explode(DIRECTORY_SEPARATOR, trim($uri, DIRECTORY_SEPARATOR));
@@ -31,7 +31,7 @@ class Lm_Controller_Router {
         //extract action   
         if (!empty($path)) {
             $script = array_pop($path);
-            $action = explode(".".$script);               
+            $action = explode(".", $script);               
             $route->setAction(strtolower($action[0]));
         } else {
             $route->setAction($this->defaultAction);

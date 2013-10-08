@@ -1,6 +1,6 @@
 <?php
 
-class Route {
+class Lm_Router_Route {
 
     const SPECIAL_DELIMITER = '_';
 

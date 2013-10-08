@@ -12,6 +12,9 @@ class Lm_Autoloader {
         return self::$loader;    
     }    
 
+    private function __contruct() {
+    }
+
     public function init() {
         spl_autoload_register(array($this, "autoload"));
         return;
@@ -19,10 +22,10 @@ class Lm_Autoloader {
 
     private function autoload($clazz) {
         $paths = explode(PATH_SEPARATOR, get_include_path());
-        $filename = str_replace('_', '/', $clazz);
+        $filename = str_replace('_', '/', $clazz).".php";
 
         foreach ($paths as $path) {           
-            $combined = $path.DIRECTORY_SEPARATOR.$file;
+            $combined = $path.DIRECTORY_SEPARATOR.$filename;
             if (is_file($combined)) {       
                 include($combined);
                 return;
