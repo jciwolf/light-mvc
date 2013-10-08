@@ -129,7 +129,7 @@ class Lm_Controller_Request {
     * @return string
     */
     public function getScriptName() {
-        return $this->getServer(SCRIPT_NAME);
+        return $this->getServer("SCRIPT_NAME");
     }
 
     /**

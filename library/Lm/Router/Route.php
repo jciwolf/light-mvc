@@ -4,6 +4,10 @@ class Lm_Router_Route {
 
     const SPECIAL_DELIMITER = '_';
 
+    const CONTROLLER_SUFFIX = 'Controller';
+
+    const ACTION_SUFFIX = 'Action';
+
     private $module = null;
 
     private $controller = null;
@@ -44,7 +48,7 @@ class Lm_Router_Route {
             $className .= ucwords($part);
         }
 
-        return $className;
+        return $className.self::CONTROLLER_SUFFIX;
     }
 
     public function getActionMethodName() {
@@ -54,7 +58,7 @@ class Lm_Router_Route {
             $methodName .= ucwords($part);
         }
     
-        return $methodName;
+        return $methodName.self::ACTION_SUFFIX;
     }
 
 }//END OF CLASS

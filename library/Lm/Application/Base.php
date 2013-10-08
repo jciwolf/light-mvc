@@ -20,10 +20,6 @@ class Lm_Application_Base {
 
     const TEMPLATE_DIR = 'template/';
 
-    const CONTROLLER_SUFFIX = 'Controller';
-
-    const ACTION_SUFFIX = 'Action';
-
     private $request = null;
 
     private $response = null;
@@ -43,7 +39,7 @@ class Lm_Application_Base {
 
     public function init() {
         $appConfigFile = $this->basePath.self::CONFIG_DIR.self::CONFIG_FILE;     
-        if (!file_exist($appConfigFile)) {
+        if (!file_exists($appConfigFile)) {
             throw new Lm_Application_Exception("Config:".$appConfigFile." doesn't exist");           
         }
         $appConfig = include($appConfigFile);
@@ -69,7 +65,7 @@ class Lm_Application_Base {
     */
     public function run() {
         $this->dispatch();
-        $this->response()->output();
+        $this->response->output();
         exit;
     }
 
@@ -79,6 +75,10 @@ class Lm_Application_Base {
         //execute handler
         $controller = $this->loadController($route);
         $action = $route->getActionMethodName();
+    
+        if (!method_exists($controller, $action)) {
+            throw new Lm_Application_NoAction("The action:".$action." doesn't exist in ".$controller);
+        }
         $controller->$action();
     }
 
@@ -92,28 +92,24 @@ class Lm_Application_Base {
             throw new Lm_Application_NoModule("The module:".$module." hasn't been configured");
         }
 
-        $moduleDir = $this->basePath."/".self::MODULE_DIR;
+        $applicationDir = $this->basePath.self::APPLICATION_DIR;
+        $moduleDir = $applicationDir.self::MODULE_DIR.$module."/";
         if (!is_dir($moduleDir)) {
             throw new Lm_Application_NoModule("The module dir:".$moduleDir." does't exist");
         }
 
         $controllerClass = $route->getControllerClassName();
-        $controllerFile = $moduleDir.$controllerClass.self::CLASSFILE_SUFFIX;
-
-        if (!file_exist($controllerFile)) {
+        $controllerFile = $moduleDir.self::CONTROLLER_DIR.$controllerClass.self::CLASSFILE_SUFFIX;
+        if (!file_exists($controllerFile)) {
             throw new Lm_Application_NoController("The controller source:".$controllerFile." doesn't exist");
         }
         
-        require ($controllerFile);
-        if (!class_exists($controller)) {
-            throw new Lm_Application_NoController("The controller class:".$controller." doesn't exist");
+        require_once ($controllerFile);
+        if (!class_exists($controllerClass)) {
+            throw new Lm_Application_NoController("The controller class:".$controllerClass." doesn't exist");
         }
 
-        $conObj = new $controllerClass(); 
-        if (!method_exists($conObj, $action)) {
-            throw new Lm_Application_NoAction("The action:".$action." doesn't exist in ".$controller);
-        }
-
+        $conObj = new $controllerClass($this->request, $this->response); 
         return $conObj;
     }
 

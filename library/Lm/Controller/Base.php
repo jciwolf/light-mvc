@@ -6,28 +6,41 @@ abstract class Lm_Controller_Base {
 
     private $response;
 
-    public function __contruct(Lm_Controller_Request $resquest, 
+    public function __construct(Lm_Controller_Request $request, 
             Lm_Controller_Response $response) {
-        $this->request = $resquest;
-        $this->response = $response;
+        $this->setRequest($request);
+        $this->setResponse($response);
     }
 
     /*
     * callback function before action is executed
     */
-    abstract public function init();
+    public function init() {
+    }
 
     /*
     * callback function after action has been executed
     */
-    abstract public function shutdown();
+    public function shutdown() {
+    }
 
     public function getRequest() {
         return $this->request;
     }
 
+    public function setRequest(Lm_Controller_Request $request) {
+        $this->request = $request;
+        return;
+    }
+
+
     public function getResponse() {
         return $this->response;
+    }
+
+    public function setResponse(Lm_Controller_Response $response) {
+        $this->response = $response;
+        return;
     }
 
     /*

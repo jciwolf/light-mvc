@@ -39,28 +39,30 @@ class Lm_Controller_Response {
     }
 
     public function setHeader($key, $value) {
-        $this->_headers[] =  array ( $key => $value );
+        $this->headers[] =  array ( $key => $value );
         return;
     }
 
     public function getHeaders() {
-        return $this->_headers;
+        return $this->headers;
     }
 
     public function clearHeaders() {
-        $this->_headers = null;
+        $this->headers = null;
         return;
     }
 
     public function output() {
         //output header
-        foreach ($this->getHeaders as $header) {
-            header($header['name'] . ': ' . $header['value']);
+        $headers = $this->getHeaders();
+        if (!empty($headers)) {
+            foreach ($headers as $header) {
+                header($header['name'] . ': ' . $header['value']);
+            }
         }
 
         //output http code
         http_response_code($this->getHttpCode());
-
 
         //output body
         echo $this->getBody();
