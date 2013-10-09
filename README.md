@@ -14,11 +14,13 @@ LightMVC is a pure php framework that only contains model-view-controller compon
     | - config.ini.php
 + application/
     | - bootstrap.php
-    | + controllers
-        | - Index.php
-    | + views    
-        |+ index   
-            | - index.tpl
+    | - module
+        | + example
+            | + controller
+                | - Index.php
+            | + template
+                |+ index   
+                    | - index.tpl
 + library
 + tests
 ```
