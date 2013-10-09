@@ -21,8 +21,9 @@ class Lm_Router {
     public function parse($uri) {
         $route = new Lm_Router_Route;
 
+        $uri = trim($uri, DIRECTORY_SEPARATOR);
         if (!empty($uri)) {
-            $path = explode(DIRECTORY_SEPARATOR, trim($uri, DIRECTORY_SEPARATOR));
+            $path = explode(DIRECTORY_SEPARATOR, $uri);
         } else {
             $path = array();
         }
