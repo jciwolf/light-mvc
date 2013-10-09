@@ -21,7 +21,11 @@ class Lm_Router {
     public function parse($uri) {
         $route = new Lm_Router_Route;
 
-        $path = explode(DIRECTORY_SEPARATOR, trim($uri, DIRECTORY_SEPARATOR));
+        if (!empty($uri)) {
+            $path = explode(DIRECTORY_SEPARATOR, trim($uri, DIRECTORY_SEPARATOR));
+        } else {
+            $path = array();
+        }
 
         $length = count($path);
         if ($length > 3) {
