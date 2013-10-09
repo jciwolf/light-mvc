@@ -24,8 +24,12 @@ class Lm_Template_Base {
         if (!empty($params)) {
             extract($params);
         }
+ 
+        //parse the template       
+        ob_start();
+        include($this->templateFilePath);
+        $content = ob_get_clean();
 
-        $content = include($this->templateFilePath);
         $response->setBody($content);
         return;
     }
