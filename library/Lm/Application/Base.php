@@ -151,4 +151,5 @@ class Lm_Application_Base {
         $template->load();
         return;
     }
-}
+
+}//END OF CLASS

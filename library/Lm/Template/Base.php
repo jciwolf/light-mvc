@@ -7,8 +7,9 @@ class Lm_Template_Base {
 
     public function __construct($templateFilePath, Lm_Controller_Response $response) {
         if (!file_exists($templateFilePath)) {
-            throw new Lm_Template_Exception();
+            throw new Lm_Template_Exception("Template:".$templateFilePath." doesn't exist");
         }
+
         $this->templateFilePath = $templateFilePath;
         $this->response = $response;
     }
