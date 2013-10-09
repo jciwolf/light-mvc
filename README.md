@@ -1,1 +1,3 @@
-a lightweight php mvc framework
+# LightMVC
+
+a pure php framework that only contains model-view-controller
