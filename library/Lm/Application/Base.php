@@ -70,7 +70,7 @@ class Lm_Application_Base {
     }
 
     public function dispatch() {
-        $route = $this->router->parse($this->request->getScriptName());
+        $route = $this->router->parse($this->request->getRequestURI());
 
         //check module  
         $this->checkModule($route);
@@ -80,7 +80,7 @@ class Lm_Application_Base {
         $action = $route->getActionMethodName();
     
         if (!method_exists($controller, $action)) {
-            throw new Lm_Application_NoAction("The action:".$action." doesn't exist in ".$controller);
+            throw new Lm_Application_NoAction("The action:".$action." doesn't exist in ".get_class($controller));
         }
 
         $response = $controller->__call($action, null);
@@ -92,6 +92,14 @@ class Lm_Application_Base {
                 $route->setAction($templateName);
             }
             $this->loadTemplate($route);
+        }
+
+        //handle error
+        $body = $response->getBody();
+        if (empty($body)) {
+            if ($response->isError()) {
+                throw $response->getException();
+            }
         }
     }
 

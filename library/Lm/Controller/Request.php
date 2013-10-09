@@ -124,12 +124,12 @@ class Lm_Controller_Request {
     }
 
     /*
-    * Get the full path of the requested file
+    * Get the request uri
     *
     * @return string
     */
-    public function getScriptName() {
-        return $this->getServer("SCRIPT_NAME");
+    public function getRequestURI() {
+        return $this->getServer("REQUEST_URI");
     }
 
     /**

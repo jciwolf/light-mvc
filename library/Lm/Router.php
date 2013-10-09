@@ -27,7 +27,7 @@ class Lm_Router {
         if ($length > 3) {
             throw new Lm_Router_Exception("request error, no script for ".$path);               
         }
-        
+ 
         //extract action   
         if (!empty($path)) {
             $script = array_pop($path);
