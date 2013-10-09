@@ -84,15 +84,15 @@ class Lm_Application_Base {
         }
 
         $response = $controller->__call($action, null);
+
         //handle template
         if ($response->getNeedTemplate()) {
             $templateName = $response->getTemplateName();
             if (!empty($templateName)) {
                 $route->setAction($templateName);
             }
+            $this->loadTemplate($route);
         }
-
-        $this->loadTemplate($route);
     }
 
     private function checkModule($route) {
