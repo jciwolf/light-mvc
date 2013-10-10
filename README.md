@@ -8,7 +8,7 @@ LightMVC is a pure php framework that only contains model-view-controller compon
 
 ```
 + public
-    | - htaccess
+    | - .htaccess
     | - index.php
 + config
     | - config.ini.php
